@@ -1,4 +1,4 @@
-Super Bunny Buster II Turbo Bounce - Carrot Edition is a score-attack game for Android tablets and smartphones in which a bunny bounces high and scores points by bursting things!
+**Super Bunny Buster II Turbo Bounce - Carrot Edition** is a score-attack game for Android tablets and smartphones in which a bunny bounces high and scores points by bursting things!
 
 The bunny bursts things by ramming into them at high speed.
 Yep.
