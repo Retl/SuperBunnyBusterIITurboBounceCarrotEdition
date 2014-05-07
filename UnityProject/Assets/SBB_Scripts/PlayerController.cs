@@ -7,12 +7,15 @@ public class PlayerController : MonoBehaviour
     string theString = "Nothinghere";
     const float MINDISTANCEFROMMARKER = 10f;
     const float MAXDISTANCEFROMSTART = 100.0f;
-    float moveSpeed = 1.0f;
-
+    float jumpSpeed = 32f;
+    float moveSpeed = 8.0f;
+    float maxSpeed = 16.0f;
     public GameObject myMarker;
-
     Vector3 startPosition;
     Quaternion startRotation;
+    public GameObject badContainer;
+    public float theVelocityMagnitude;
+    public bool isJumping = false;
 
     // Use this for initialization
     void Start()
@@ -24,25 +27,30 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        theVelocityMagnitude = rigidbody2D.velocity.magnitude;
+        //Let the input handler take care of this, but know that this behavior is an option. - Moore
+        /*
         if (Input.GetButton("Fire1"))
         {  
             Jump();
         }
+        */
 
 
-        FollowMoveMarker();
+        //FollowMoveMarker();
 
         if (Vector3.Distance(transform.position, startPosition) > MAXDISTANCEFROMSTART)
         {
             transform.position = startPosition;
             transform.rotation = startRotation;
+            /*
             if (rigidbody != null)
             {
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
 
             }
+            */
         }
     }
 
@@ -54,7 +62,7 @@ public class PlayerController : MonoBehaviour
         if (myMarker != null)
         {
             myMarker.transform.position = new Vector3(touch.position.x, myMarker.transform.position.y, myMarker.transform.position.z);
-        }	
+        }   
         */
 
     }
@@ -88,20 +96,65 @@ public class PlayerController : MonoBehaviour
 
     void OnGUI()
     {
-        TouchHandler bad = gameObject.GetComponent<TouchHandler>();
+        TouchHandler bad = badContainer.GetComponent<TouchHandler>();
         GUI.Label(new Rect(0, 0, (Screen.width / 4), (Screen.height / 4)), theString + " Count: " + bad.TouchCount);
     }
 
     //Player Action Methods.
-    void Jump()
+    public void Jump()
     {
-        /*if (rigidbody != null)
+        if (isJumping)
         {
-            rigidbody.AddForce(transform.up * moveSpeed);
+            Burst();
         } else
-        {*/
-        transform.position += transform.up * moveSpeed * 10;
-        //}
+        {
+            if (rigidbody2D != null)
+            {
+                if (rigidbody2D.velocity.y < 0)
+                {
+                    rigidbody2D.velocity -= new Vector2(0, rigidbody2D.velocity.y);
+                }
+                rigidbody2D.AddForce(Vector2.up * jumpSpeed * 10);
+            } else
+            {
+                transform.position += transform.up * jumpSpeed * 10;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Make this script's hosting gameObject perform the burst attack. Lock on to the nearest target and zoom towards at a high speed.
+    /// </summary>
+    public void Burst()
+    {
+
+    }
+
+    /// <summary>
+    /// This method takes in a float 'amount' from -1.0f to 1.0f. 
+    /// This amount is multiplied by the moveSpeed scalar and used to AddForce to this object's rigidbody2D (if it has one) right. 
+    /// </summary>
+    /// <param name="amount">Amount.</param>
+    public void MoveHorizontal(float amount)
+    {
+        if (rigidbody2D != null)
+        {
+            rigidbody2D.AddForce(Vector2.right * moveSpeed * amount);
+            if (rigidbody2D.velocity.magnitude > maxSpeed)
+            {
+                //If the player's current speed is faster than they are supposed to be able to move, clamp the speed down. Careful though, as this does include vertical speed.
+                rigidbody2D.velocity = rigidbody2D.velocity.normalized * Mathf.Clamp(rigidbody2D.velocity.magnitude, -maxSpeed, maxSpeed);
+            }
+        }
+    }
+
+    public void MoveVertical(float amount)
+    {
+        //STUB.
+        if (rigidbody2D != null)
+        {
+            rigidbody2D.AddForce(Vector2.up * moveSpeed * amount); //DELETEME - Moore
+        }
     }
 
     void FollowMoveMarker()
