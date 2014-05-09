@@ -22,8 +22,8 @@ public class InputHandler : MonoBehaviour
         }
     }
     
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate is called once per physics update, and is consistant between systems.
+    void FixedUpdate()
     {
 
         ///<summary>This is the section where we deal with all of the input to be done when the Fire1/Jump button is pressed.</summary>
@@ -64,7 +64,7 @@ public class InputHandler : MonoBehaviour
         {
             if (p != null)
             {
-                p.MoveVertical(verticalInput);
+                //p.MoveVertical(verticalInput);
             }
         }
 

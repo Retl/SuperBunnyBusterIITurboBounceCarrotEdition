@@ -24,8 +24,8 @@ public class PlayerController : MonoBehaviour
         startRotation = transform.rotation;
     }
     
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate is called once per physics update, and is regular across systems.
+    void FixedUpdate()
     {
         theVelocityMagnitude = rigidbody2D.velocity.magnitude;
         //Let the input handler take care of this, but know that this behavior is an option. - Moore
@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
             }
             */
         }
+
+
     }
 
     void OnTouchBeganSingle(Touch touch)
@@ -139,12 +141,9 @@ public class PlayerController : MonoBehaviour
     {
         if (rigidbody2D != null)
         {
-            rigidbody2D.AddForce(Vector2.right * moveSpeed * amount);
-            if (rigidbody2D.velocity.magnitude > maxSpeed)
-            {
-                //If the player's current speed is faster than they are supposed to be able to move, clamp the speed down. Careful though, as this does include vertical speed.
-                rigidbody2D.velocity = rigidbody2D.velocity.normalized * Mathf.Clamp(rigidbody2D.velocity.magnitude, -maxSpeed, maxSpeed);
-            }
+            float maintainYComponent = rigidbody2D.velocity.y;
+            rigidbody2D.velocity = new Vector2( amount * moveSpeed, maintainYComponent);
+
         }
     }
 
