@@ -24,6 +24,16 @@ public class BAD : MonoBehaviour
 	
     }
 
+    //Only called 
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.GetComponent<PlayerController>()!= null)
+        {
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
+        }
+    }
+
     void OnGUI()
     {
 				
@@ -34,9 +44,16 @@ public class BAD : MonoBehaviour
     private Vector3 ScreenPositionToWorldPosition(Vector2 screenPos)
     {
         Vector3 result;
-        Ray tempRay = camera.ScreenPointToRay(screenPos);
+        Ray tempRay = Camera.main.ScreenPointToRay(screenPos);
         result = tempRay.GetPoint(9.0f);
+        result = new Vector3(result.x, result.y, 0);
+        print(result.ToString());
         return result;
+    }
+
+    public void JumpToPosition(Vector3 destination)
+    {
+        transform.position = destination;
     }
 }
 

@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         */
 
 
-        //FollowMoveMarker();
+        FollowMoveMarker();
 
         if (Vector3.Distance(transform.position, startPosition) > MAXDISTANCEFROMSTART)
         {
@@ -158,9 +158,9 @@ public class PlayerController : MonoBehaviour
 
     void FollowMoveMarker()
     {
-        /*GameObject theMarker = RevelUtils.FindClosestGameObjectWithTag(gameObject, "MoveMarker")*/
-        ;
-        GameObject theMarker = myMarker;
+        GameObject theMarker;
+        theMarker = RevelUtils.FindClosestGameObjectWithTag(gameObject, "MoveMarker");
+        //theMarker = myMarker;
         if (theMarker != null /*&& RevelUtils.IsNotWithinDistanceThreshold(gameObject, theMarker, MINDISTANCEFROMMARKER)*/)
         {
             /*Vector3 temp = theMarker.transform.position - gameObject.transform.position;
@@ -174,14 +174,8 @@ public class PlayerController : MonoBehaviour
             {
                 transform.position += temp;
             }*/
-            if (transform.position.x > theMarker.transform.position.x)
-            {
-                transform.position -= (new Vector3(moveSpeed, 0, 0));
-            } else if (transform.position.x < theMarker.transform.position.x)
-            {
-                transform.position += (new Vector3(moveSpeed, 0, 0));
-            }
-
+            float goingTowards = Mathf.Clamp(theMarker.transform.position.x - transform.position.x, -1, 1);
+            MoveHorizontal(goingTowards);
         }
     }
 
